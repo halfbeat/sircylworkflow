@@ -1,0 +1,14 @@
+[project]
+name = "sircyl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["authzclient", "sircylclient"]
+
+[tool.uv.sources]
+authzclient = { workspace = true }
+sircylclient = { workspace = true }
+
+[tool.uv.workspace]
+members = ["packages/*"]
