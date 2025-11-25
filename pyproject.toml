@@ -4,11 +4,15 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["authzclient", "sircylclient"]
-
-[tool.uv.sources]
-authzclient = { workspace = true }
-sircylclient = { workspace = true }
+dependencies = [
+    "authzclient>=0.1.0",
+    "cryptography>=46.0.3",
+    "flask>=3.1.2",
+    "logging-gelf>=0.0.32",
+    "pika>=1.3.2",
+    "pyjwt>=2.10.1",
+    "sircylclient>=0.1.0",
+]
 
 [tool.uv.workspace]
 members = ["packages/*"]
@@ -17,10 +21,16 @@ members = ["packages/*"]
 requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
 
+[[tool.uv.index]]
+name = "jcyl-gss"
+url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/simple"
+publish-url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local"
+explicit = true
+
 [dependency-groups]
 dev = [
-    {include-group = "lint"},
-    {include-group = "test"}
+    { include-group = "lint" },
+    { include-group = "test" }
 ]
 lint = [
     "ruff>=0.14.5",
