@@ -26,7 +26,7 @@ def handle(
             cmd_result = handle_command(message, queue, uow)
             results.append(cmd_result)
         else:
-            raise Exception(f"{message} was not an Event or Command")
+            raise ValueError(f"{message} was not an Event or Command")
     return results
 
 
@@ -71,4 +71,5 @@ EVENT_HANDLERS = {
 
 COMMAND_HANDLERS = {
     commands.GenerarPlanDescargaCommand: handlers.generar_plan_descarga,
+    commands.EjecutarPlanDescargaCommand: handlers.ejecutar_plan_descarga
 }  # type: Dict[Type[commands.Command], Callable]

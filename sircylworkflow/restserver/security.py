@@ -1,5 +1,4 @@
 import os
-from contextvars import ContextVar
 from dataclasses import dataclass
 from enum import Enum
 from functools import wraps
@@ -12,19 +11,9 @@ from authzclient.model import Usuario, Rol
 from authzclient.port import AuthorizationPort
 from flask import current_app
 from flask import request
-from werkzeug.local import LocalProxy
 
 from customsecrets import Secrets
-
-
-class Roles(Enum):
-    GESTOR = 'SRCL@APP'
-
-
-class Permisos(Enum):
-    GENERAR_PLAN_DESCARGA = 'asientos:generar_plan_descarga'
-    CONSULTAR_ASIENTOS = 'asientos:consultar'
-    DESCARGAR_DOCUMENTOS = 'asiento:descargar_documentos'
+from .globals import _current_user_context_var
 
 
 @dataclass(frozen=True)
@@ -37,13 +26,7 @@ class MyUsuario(Usuario):
     sircyl_password: Optional[str]
 
 
-_current_user_context_var: ContextVar[MyUsuario] = ContextVar('current_user')
-current_user: MyUsuario = LocalProxy(  # type: ignore[assignment]
-    _current_user_context_var, unbound_message="No existe un usuario en este contexto"
-)
-
 _auth_port_singleton: AuthorizationPort | None = None
-
 
 def instance_auth_port() -> AuthorizationPort:
     global _auth_port_singleton
@@ -54,10 +37,20 @@ def instance_auth_port() -> AuthorizationPort:
     return _auth_port_singleton
 
 
+class Roles(Enum):
+    GESTOR = 'SRCL@APP'
+
+
+class Permisos(Enum):
+    GENERAR_PLAN_DESCARGA = 'asientos:generar_plan_descarga'
+    CONSULTAR_ASIENTOS = 'asientos:consultar'
+    DESCARGAR_DOCUMENTOS = 'asiento:descargar_documentos'
+    EJECUTAR_PLAN_DESCARGA = 'asientos:ejecutar_plan_descarga'
+
 def token_required(func):
     """
     Decorador Comprobación de que hay un token JWT y que confiamos en el
-    :param _auth_port_singleton: función a la que llamar si la comprobacioón es correcta
+    :func: función a la que llamar si la comprobación es correcta
     :return: el propio decorador
     """
 

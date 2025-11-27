@@ -29,9 +29,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "requests" },
 ]
-sdist = { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/authzclient/0.1.0/authzclient-0.1.0.tar.gz", hash = "sha256:693efe2cc02d88da3f6be1756bd101a35bdcae978bb6373b87644dd9ae96807c" }
+sdist = { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/authzclient/0.1.0/authzclient-0.1.0.tar.gz", hash = "sha256:92c08db1c8c7505cbc9501531b0ac10b923fee05af57917b442083da262a3461" }
 wheels = [
-    { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/authzclient/0.1.0/authzclient-0.1.0-py3-none-any.whl", hash = "sha256:83dd90c21451c818c8509efb96f8283fa6b741a15f9275ffc771b0c5439796f3" },
+    { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/authzclient/0.1.0/authzclient-0.1.0-py3-none-any.whl", hash = "sha256:e5b45559b96c6f1c74dda05fe2a5aedc25bc45c21cb6eed4094531efe7f42023" },
 ]
 
 [[package]]
@@ -1012,9 +1012,9 @@ dependencies = [
     { name = "tdqm" },
     { name = "zeep", extra = ["xmlsec"] },
 ]
-sdist = { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/sircylclient/0.1.0/sircylclient-0.1.0.tar.gz", hash = "sha256:2bf8bcb91dc1cc1fd02875b2545ea337782fa64d77d6dff402aa3dafeb1d62c1" }
+sdist = { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/sircylclient/0.1.0/sircylclient-0.1.0.tar.gz", hash = "sha256:8fd46f64428ebcb565ee08630926c58c3f55de2d0d6a75313f48bb8d6d166c89" }
 wheels = [
-    { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/sircylclient/0.1.0/sircylclient-0.1.0-py3-none-any.whl", hash = "sha256:ed6c77a500e4cc8604ce46074307c4d275d8e74bc8f4291623ca9dad275b42df" },
+    { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/sircylclient/0.1.0/sircylclient-0.1.0-py3-none-any.whl", hash = "sha256:bf77ee7409a4c5d826ff697623adab737fd990657bc31b0aba07c286f2f53d20" },
 ]
 
 [[package]]

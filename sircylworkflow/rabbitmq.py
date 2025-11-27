@@ -41,7 +41,7 @@ class RabbitMQ:
         :param inactivity_timeout: Timeout de inactividad de la cola. None indica infinto
         """
 
-        if not self.channel:
+        if not self.channel or self.channel.is_closed:
              self.connect()
         for method_frame, properties, body in self.channel.consume(queue_name, inactivity_timeout=inactivity_timeout):
             if not method_frame:
@@ -70,7 +70,7 @@ class RabbitMQ:
                 self.channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=auto_ack)
 
     def publish(self, exchange_name, routing_key, message, headers=None, ttl=None):
-        if not self.channel:
+        if not self.channel or self.channel.is_closed:
             self.connect()
         a_ttl = ttl or self.ttl
         self.channel.basic_publish(exchange=exchange_name,
@@ -83,17 +83,17 @@ class RabbitMQ:
                                    ))
 
     def declare_queue(self, queue_name, durable=False):
-        if not self.channel:
+        if not self.channel or self.channel.is_closed:
             self.connect()
         self.channel.queue_declare(queue=queue_name, durable=durable)
 
     def declare_exchange(self, exchange_name, exchange_type: ExchangeType | str = "direct", durable=False):
-        if not self.channel:
+        if not self.channel or self.channel.is_closed:
             self.connect()
         self.channel.exchange_declare(exchange=exchange_name, exchange_type=exchange_type, durable=durable)
 
     def queue_bind(self, queue_name, exchange_name, routing_key):
-        if not self.channel:
+        if not self.channel or self.channel.is_closed:
             self.connect()
         self.channel.queue_bind(queue_name, exchange_name, routing_key)
 

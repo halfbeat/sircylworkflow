@@ -1,14 +1,17 @@
 import datetime as dt
 import logging
+from pathlib import Path
 
 from flask import Response, request
+from werkzeug.utils import secure_filename
 
 from constants import MIMETYPE_CSV, MIMETYPE_JSON
-from domain.commands import GenerarPlanDescargaCommand, FormatoDescarga
-from restserver import app
-from restserver.security import token_required
-from service_layer.view import SolicitudDescargaDocumentosViewDto
+from domain.commands import GenerarPlanDescargaCommand, FormatoDescarga, EjecutarPlanDescargaCommand
+from error import BadParam
 from service_layer import messagebus
+from service_layer.view import SolicitudDescargaDocumentosViewDto
+from sircylworkflow.restserver import app
+from sircylworkflow.restserver.security import token_required
 
 
 @app.route("/healthcheck", methods=["GET"])
@@ -34,3 +37,17 @@ def generar_plan_descarga():
     plan_id = f'{dt.datetime.now():%Y%m%d%H%M%S}'
     return Response(output, mimetype=request.headers.get("Accept"),
                     headers={"Content-disposition": f"fattachment; filename={plan_id}.{formato.value}"})
+
+
+@app.route("/api/v1/ejecutarPlanDescarga", methods=["POST"])
+@token_required
+def ejecutar_plan_descarga():
+    if 'file' not in request.files:
+        raise BadParam('No file part')
+    file = request.files['file']
+    if file.filename == '':
+        raise BadParam('No file part')
+    filename = secure_filename(file.filename)
+    plan_id = Path(filename).stem
+    messagebus.handle(EjecutarPlanDescargaCommand(plan_id, file.read().decode('utf-8')))
+    return '', 204

@@ -16,9 +16,6 @@ class AbstractUnitOfWork(abc.ABC):
         self._commit()
 
     def collect_new_events(self):
-        # for sistema in self.sistemas.seen:
-        #     while sistema.events:
-        #         yield sistema.events.pop(0)
         pass
 
     @abc.abstractmethod
