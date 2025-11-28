@@ -23,16 +23,28 @@ wheels = [
 [[package]]
 name = "authzclient"
 version = "0.1.0"
-source = { registry = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/simple" }
+source = { directory = "../authzclient" }
 dependencies = [
     { name = "cachetools" },
     { name = "pydantic" },
     { name = "requests" },
 ]
-sdist = { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/authzclient/0.1.0/authzclient-0.1.0.tar.gz", hash = "sha256:92c08db1c8c7505cbc9501531b0ac10b923fee05af57917b442083da262a3461" }
-wheels = [
-    { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/authzclient/0.1.0/authzclient-0.1.0-py3-none-any.whl", hash = "sha256:e5b45559b96c6f1c74dda05fe2a5aedc25bc45c21cb6eed4094531efe7f42023" },
+
+[package.metadata]
+requires-dist = [
+    { name = "cachetools", specifier = ">=6.2.2" },
+    { name = "pydantic", specifier = ">=2.12.4" },
+    { name = "requests", specifier = ">=2.32.5" },
 ]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=9.0.1" },
+    { name = "ruff", specifier = ">=0.14.5" },
+]
+lint = [{ name = "ruff", specifier = ">=0.14.5" }]
+prod = []
+test = [{ name = "pytest", specifier = ">=9.0.1" }]
 
 [[package]]
 name = "backports-datetime-fromisoformat"
@@ -1013,14 +1025,14 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "authzclient", specifier = ">=0.1.0" },
+    { name = "authzclient", directory = "../authzclient" },
     { name = "cryptography", specifier = ">=46.0.3" },
     { name = "dependency-injector", specifier = ">=4.48.2" },
     { name = "flask", specifier = ">=3.1.2" },
     { name = "logging-gelf", specifier = ">=0.0.32" },
     { name = "pika", specifier = ">=1.3.2" },
     { name = "pyjwt", specifier = ">=2.10.1" },
-    { name = "sircylclient", specifier = ">=0.1.0" },
+    { name = "sircylclient", directory = "../sircylclient" },
 ]
 
 [package.metadata.requires-dev]
@@ -1035,15 +1047,26 @@ test = [{ name = "pytest", specifier = ">=9.0.1" }]
 [[package]]
 name = "sircylclient"
 version = "0.1.0"
-source = { registry = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/simple" }
+source = { directory = "../sircylclient" }
 dependencies = [
     { name = "tdqm" },
     { name = "zeep", extra = ["xmlsec"] },
 ]
-sdist = { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/sircylclient/0.1.0/sircylclient-0.1.0.tar.gz", hash = "sha256:8fd46f64428ebcb565ee08630926c58c3f55de2d0d6a75313f48bb8d6d166c89" }
-wheels = [
-    { url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/sircylclient/0.1.0/sircylclient-0.1.0-py3-none-any.whl", hash = "sha256:bf77ee7409a4c5d826ff697623adab737fd990657bc31b0aba07c286f2f53d20" },
+
+[package.metadata]
+requires-dist = [
+    { name = "tdqm", specifier = ">=0.0.1" },
+    { name = "zeep", extras = ["xmlsec"], specifier = ">=4.3.2" },
 ]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=9.0.1" },
+    { name = "ruff", specifier = ">=0.14.5" },
+]
+lint = [{ name = "ruff", specifier = ">=0.14.5" }]
+prod = []
+test = [{ name = "pytest", specifier = ">=9.0.1" }]
 
 [[package]]
 name = "tdqm"

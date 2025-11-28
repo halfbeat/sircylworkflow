@@ -28,6 +28,10 @@ url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local/s
 publish-url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi-local"
 explicit = true
 
+[tool.uv.sources]
+authzclient = { path = "../authzclient" }
+sircylclient = { path = "../sircylclient" }
+
 [dependency-groups]
 dev = [
     { include-group = "lint" },
