@@ -1,4 +1,3 @@
-from  sircylworkflow.di import application
 import argparse
 import os
 import sys
@@ -36,14 +35,22 @@ parser.add_argument("--gelf-host", help="Host para enviar logs a Graylog",
 parser.add_argument("--gelf-port", help="Puerto para enviar logs a Graylog",
                     default=os.environ.get("GRAYLOG_PORT", "32201"))
 
+from restserver import app
+
 def main():
     args = parser.parse_args()
-    app = application.create_app()
-    app.container.config.sircyl.ws_url.from_value(args.sircyl_url)
-    app.container.config.sircyl.username.from_value(args.sircyl_username)
-    app.container.config.sircyl.password.from_value(args.sircyl_password)
-    app.run()
+    container = app.container
+    container.config.sircyl.sircyl_url.from_value(args.sircyl_url)
+    container.config.sircyl.sircyl_username.from_value(args.sircyl_username)
+    container.config.sircyl.sircyl_password.from_value(args.sircyl_password)
+    container.config.sircyl.sircyl_max_call_per_minute.from_value(args.sircyl_max_call_per_minute)
+    container.config.sircyl.tam_pagina.from_value(args.tam_pagina)
+
+    container.config.rabbitmq.sircyl_url.from_value(args.sircyl_url)
+    container.config.rabbitmq.sircyl_username.from_value(args.sircyl_username)
+    container.config.rabbitmq.sircyl_password.from_value(args.sircyl_password)
+    app.run(host=args.address, port=args.port)
+
 
 if __name__ == "__main__":
-    main()
-
+    sys.exit(main())

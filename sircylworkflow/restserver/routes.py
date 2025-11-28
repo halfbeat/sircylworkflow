@@ -2,25 +2,26 @@ import datetime as dt
 import logging
 from pathlib import Path
 
+from flask import Blueprint
 from flask import Response, request
 from werkzeug.utils import secure_filename
 
 from constants import MIMETYPE_CSV, MIMETYPE_JSON
 from domain.commands import GenerarPlanDescargaCommand, FormatoDescarga, EjecutarPlanDescargaCommand
 from error import BadParam
-from service_layer import messagebus
+from restserver.security import token_required
+from service_layer import unit_of_work, messagebus
 from service_layer.view import SolicitudDescargaDocumentosViewDto
-from sircylworkflow.restserver import app
-from sircylworkflow.restserver.security import token_required
 
+rest_services_blueprint = Blueprint('rest_services', __name__, )
 
-@app.route("/healthcheck", methods=["GET"])
+@rest_services_blueprint.route("/healthcheck", methods=["GET"])
 def healthcheck():
     logging.info("UP!")
     return Response("OK", status=200, mimetype="text/plain")
 
 
-@app.route("/api/v1/generarPlanDescarga", methods=["POST"])
+@rest_services_blueprint.route("/api/v1/generarPlanDescarga", methods=["POST"])
 @token_required
 def generar_plan_descarga():
     solicitud_view = SolicitudDescargaDocumentosViewDto(**request.get_json())
@@ -31,6 +32,7 @@ def generar_plan_descarga():
     else:
         raise ValueError(f"El formato {request.headers.get('Accept')} no está soportado")
 
+    uow = unit_of_work.UnitOfWorkImpl()
     output = messagebus.handle(
         GenerarPlanDescargaCommand(solicitud_view.fecha_inicio, solicitud_view.fecha_fin, formato))[0]
 
@@ -39,7 +41,7 @@ def generar_plan_descarga():
                     headers={"Content-disposition": f"fattachment; filename={plan_id}.{formato.value}"})
 
 
-@app.route("/api/v1/ejecutarPlanDescarga", methods=["POST"])
+@rest_services_blueprint.route("/api/v1/ejecutarPlanDescarga", methods=["POST"])
 @token_required
 def ejecutar_plan_descarga():
     if 'file' not in request.files:

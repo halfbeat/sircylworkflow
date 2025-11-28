@@ -4,7 +4,6 @@ from . import view
 
 def create_app():
     container = Container()
-    container.config.sircyl.ws_url.from_value("https://google.com")
     
     app = Flask(__name__)
     app.container = container
