@@ -16,8 +16,20 @@
             "type": "debugpy",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "module": "sircylworkflow.restserver:main",
-            "console": "integratedTerminal"
+            "module": "sircylworkflow.di.restserver",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": false
+        },
+        {
+            "name": "Python Debugger: Container",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "module": "sircylworkflow.di.containers",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": false
         }
     ]
 }

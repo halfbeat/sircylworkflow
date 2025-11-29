@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from constants import MIMETYPE_CSV, MIMETYPE_JSON
 from domain.commands import GenerarPlanDescargaCommand, FormatoDescarga, EjecutarPlanDescargaCommand
 from error import BadParam
-from restserver.security import token_required
+from sircylworkflow.di.infra.security import token_required
 from service_layer import unit_of_work, messagebus
 from service_layer.view import SolicitudDescargaDocumentosViewDto
 

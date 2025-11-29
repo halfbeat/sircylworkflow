@@ -4,50 +4,24 @@ from enum import Enum
 from functools import wraps
 from typing import Optional
 
+from dependency_injector.wiring import Provide, inject
 import jwt
-from authzclient.authz import AuthzAdapter
+from authzclient.authz import AuthzAdapter, AuthzConfig
 from authzclient.error import TokenJwtInvalido, TokenJwtRequerido
 from authzclient.model import Usuario, Rol
 from authzclient.port import AuthorizationPort
 from flask import current_app
 from flask import request
 
-from customsecrets import Secrets
-from .globals import _current_user_context_var
+from sircylworkflow.di.containers import Container
+from sircylworkflow.di.domain.security import MyUsuario, Permisos, Roles
+
+from ...customsecrets import Secrets
+from ...globals import _current_user_context_var
 
 
-@dataclass(frozen=True)
-class MyUsuario(Usuario):
-    nombre: Optional[str]
-    apellidos: Optional[str]
-    email: Optional[str]
-    documento_identidad: Optional[str]
-    sircyl_username: Optional[str]
-    sircyl_password: Optional[str]
-
-
-_auth_port_singleton: AuthorizationPort | None = None
-
-def instance_auth_port() -> AuthorizationPort:
-    global _auth_port_singleton
-    if _auth_port_singleton is None:
-        _auth_port_singleton = AuthzAdapter(os.environ.get("AUTHZ_APLICACION"),
-                                            os.environ.get("AUTHZ_URI"),
-                                            os.environ.get("AUTHZ_TOKEN"))
-    return _auth_port_singleton
-
-
-class Roles(Enum):
-    GESTOR = 'SRCL@APP'
-
-
-class Permisos(Enum):
-    GENERAR_PLAN_DESCARGA = 'asientos:generar_plan_descarga'
-    CONSULTAR_ASIENTOS = 'asientos:consultar'
-    DESCARGAR_DOCUMENTOS = 'asiento:descargar_documentos'
-    EJECUTAR_PLAN_DESCARGA = 'asientos:ejecutar_plan_descarga'
-
-def token_required(func):
+@inject
+def token_required(func, authz_port: AuthzAdapter = Provide[Container.authz_port_factory]):
     """
     Decorador Comprobación de que hay un token JWT y que confiamos en el
     :func: función a la que llamar si la comprobación es correcta
@@ -58,8 +32,17 @@ def token_required(func):
     def decorated(*args, **kwargs):
         if current_app.config.get("AUTHENTICATION", 1) == 0:
             # Devuelvo un usuario con todos los permisos
-            user = MyUsuario("superuser", roles=[], jwt_token=None, nombre=None, apellidos=None, email=None,
-                             documento_identidad=None, sircyl_username=None, sircyl_password=None)
+            user = MyUsuario(
+                "superuser",
+                roles=[],
+                jwt_token=None,
+                nombre=None,
+                apellidos=None,
+                email=None,
+                documento_identidad=None,
+                sircyl_username=None,
+                sircyl_password=None,
+            )
         else:
             token = request.headers.get("Authorization")
             if not token:
@@ -86,13 +69,23 @@ def token_required(func):
             if current_app.config.get("AUTHORIZATION", 1) == 0:
                 roles = [Rol(Roles.GESTOR.value, [], [p.value for p in Permisos])]
             else:
-                roles = instance_auth_port().get_roles_principal(principal)
+                roles = authz_port.get_roles_principal(principal)
 
             secrets_dir = current_app.config.get("SECRETS_DIR")
             secrets = Secrets(secrets_dir)
-            usename = secrets.get_value(f"{principal}_USER")
+            username = secrets.get_value(f"{principal}_USER")
             password = secrets.get_value(f"{principal}_PASS")
-            user = MyUsuario(principal, roles, nombre, jwt_token, apellidos, email, dni_nie, usename, password)
+            user = MyUsuario(
+                principal,
+                roles,
+                jwt_token,
+                nombre,
+                apellidos,
+                email,
+                dni_nie,
+                username,
+                password,
+            )
 
         old_var = _current_user_context_var.set(user)
         current_app.logger.debug(f"Recuperada la información del usuario: {user}")

@@ -1,4 +1,4 @@
-from sircylworkflow.restserver.globals import current_user
+from sircylworkflow.globals import current_user
 
 def test_current_user_context():
     print("HOLA")

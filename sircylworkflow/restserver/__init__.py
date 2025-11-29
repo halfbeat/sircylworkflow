@@ -7,9 +7,9 @@ from logging_gelf.handlers import GELFTCPSocketHandler
 from logging_gelf.schemas import GelfSchema
 from marshmallow import fields
 
-from restserver.containers import ApplicationContainer
+from .containers import ApplicationContainer
 # from routes import rest_services_blueprint
-from sircylworkflow.restserver.security import MyUsuario
+from sircylworkflow.di.infra.security import MyUsuario
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

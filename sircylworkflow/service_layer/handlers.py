@@ -13,8 +13,8 @@ from sircylworkflow.constants import SIRCYL_EXCHANGE_NAME, SIRCYL_PLAN_EJECUCION
 from sircylworkflow.domain import commands
 from sircylworkflow.domain.commands import FormatoDescarga, EjecutarPlanDescargaCommand
 from sircylworkflow.restserver import sircyl_client, symmetric_key_instance, rabbitmq_client
-from sircylworkflow.restserver.globals import current_user
-from sircylworkflow.restserver.security import Permisos
+from sircylworkflow.globals import current_user
+from sircylworkflow.di.infra.security import Permisos
 from sircylworkflow.service_layer.view import PlanDescargaViewDto, AsientoViewDto
 
 
