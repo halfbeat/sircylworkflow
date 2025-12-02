@@ -15,11 +15,11 @@ from sircylworkflow.view.model import AsientoViewDto
 
 class EjecutarPlanDescargaHandler(CommandHandler):
     def __init__(
-        self,
-        sircyl_client: SircylClient,
-        rabbitmq_client: RabbitMQ,
-        current_user: MyUsuario,
-        symmetric_key_instance: SymmetricKey,
+            self,
+            sircyl_client: SircylClient,
+            rabbitmq_client: RabbitMQ,
+            current_user: MyUsuario,
+            symmetric_key_instance: SymmetricKey
     ) -> None:
         super().__init__()
         self._sircyl_client = sircyl_client
@@ -57,11 +57,11 @@ class EjecutarPlanDescargaHandler(CommandHandler):
                         "registro": asiento.numero_registro,
                         "fecha_registro": asiento.fecha_registro.isoformat(),
                         "usuario_sircyl": self._symmetric_key_instance.encrypt(
-                            client._username.encode()
-                        ) if client._username else None,
+                            username.encode()
+                        ) if username else None,
                         "password_sircyl": self._symmetric_key_instance.encrypt(
-                            client._password.encode()
-                        ) if client._password else None,
+                            password.encode()
+                        ) if password else None,
                     }
                     self._rabbitmq_client.publish(
                         SIRCYL_EXCHANGE_NAME,

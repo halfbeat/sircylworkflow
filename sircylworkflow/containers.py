@@ -1,5 +1,7 @@
 import dataclasses
 import datetime as dt
+
+from authzclient.port import AuthorizationPort
 from dependency_injector.wiring import Provide, inject
 import jwt
 from authzclient.authz import AuthzAdapter, AuthzConfig
@@ -8,6 +10,7 @@ from dependency_injector import containers, providers
 from flask import current_app, request
 from sircylclient.client import SircylClient
 
+from application.sircylmock import SircylClientMock
 from sircylworkflow.application.handlers.ejecutar_plan_descarga import (
     EjecutarPlanDescargaHandler,
 )
@@ -43,7 +46,7 @@ def obtener_usuario_en_curso2(
 
 
 def obtener_usuario_en_curso(
-    authz_port: AuthzAdapter, secrets: PathSecrets
+    authz_port: AuthorizationPort, secrets: PathSecrets
 ) -> MyUsuario | None:
     token = request.headers.get("Authorization")
     if not token:
@@ -93,13 +96,14 @@ class Container(containers.DeclarativeContainer):
     )
     # authz_port_factory = providers.Factory(AuthzAdapter, config=authz_config_factory)
     authz_port_factory = providers.Object(AuthzMock())
-    sircyl_client_factory = providers.Factory(
-        SircylClient,
-        ws_url=config.sircyl.ws_url,
-        default_username=config.sircyl.username,
-        default_password=config.sircyl.password,
-        calls_per_minute=config.sircyl.max_calls_per_minute,
-    )
+    # sircyl_client_factory = providers.Factory(
+    #     SircylClient,
+    #     ws_url=config.sircyl.ws_url,
+    #     default_username=config.sircyl.username,
+    #     default_password=config.sircyl.password,
+    #     calls_per_minute=config.sircyl.max_calls_per_minute,
+    # )
+    sircyl_client_factory = providers.Object(SircylClientMock())
     secrets_factory = providers.Factory(PathSecrets, config.secrets.path)
     current_user_factory = providers.Callable(
         obtener_usuario_en_curso, authz_port_factory, secrets_factory

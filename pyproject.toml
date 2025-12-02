@@ -12,11 +12,8 @@ dependencies = [
     "logging-gelf>=0.0.32",
     "pika>=1.3.2",
     "pyjwt>=2.10.1",
-    "sircylclient>=0.1.0",
+    "sircylclient>=0.1.0a1",
 ]
-
-[tool.uv.workspace]
-members = ["packages/*"]
 
 [build-system]
 requires = ["setuptools>=42"]
@@ -29,8 +26,8 @@ publish-url = "https://despliegues.ae.jcyl.es/artifactory/api/pypi/jcyl-gss-pypi
 explicit = true
 
 [tool.uv.sources]
-authzclient = { path = "../authzclient" }
-sircylclient = { path = "../sircylclient" }
+authzclient = { path = "../authzclient", editable=false }
+sircylclient = { path = "../sircylclient", editable=true }
 
 [dependency-groups]
 dev = [

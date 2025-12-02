@@ -32,7 +32,7 @@ class GenerarPlanDescargaHandler(CommandHandler):
             serializer = Serializer.instance("csv", si)
             serializer.serialize(asientos)
             si.seek(0)
-            return si
+            return si.read()
         elif cmd.formato.value == FormatoDescarga.JSON.value:
             plan = PlanDescargaViewDto(
                 id=f"{dt.datetime.now():%Y%m%d%H%M%S}",
