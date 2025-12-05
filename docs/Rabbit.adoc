@@ -1,0 +1,66 @@
+= Exchanges y Colas
+
+== Listado de Exchanges
+
+* SirCyL_Exchange
+* SirCyL_Documentos_Exchange
+
+== Listado de Colas
+
+* Sircyl_Plans_Queue
+* Sircyl_Asientos_Queue
+* SirCyL_Solicitudes_Descarga_Queue
+* SirCyL_Documentos_Queue
+
+== Diagrama de conexión
+
+
+[ditaa]
+....
++-----------------+   Asiento_SirCyL   +-----------------------+
+| SirCyL_Exchange |--+---------------->| Sircyl_Asientos_Queue |
++-----------------+  |                 +-----------------------+
+                     |
+                     +---------------->
+....
+
+[graphviz]
+....
+digraph G {
+    rankdir=TB
+    size="8"
+    Sircyl_Asientos_Queue [shape=rectangle]
+    SirCyL_Documentos_Queue [shape=rectangle]
+    SirCyL_Exchange [shape=ellipse]
+    SirCyL_Documentos_Exchange [shape=ellipse]
+    SircylDocumentDownloaderWorker [label="Sircyl\nDocument\nDownloader\nWorker" shape=circle  fillcolor="gray" style="filled"]
+    SirCyL_Exchange -> Sircyl_Asientos_Queue [label ="Asiento_SirCyL"];
+    Sircyl_Asientos_Queue -> SircylDocumentDownloaderWorker -> SirCyL_Documentos_Exchange
+    SirCyL_Documentos_Exchange -> SirCyL_Documentos_Queue [label = "sircyl.asientos.*.documentos"]
+}
+....
+
+
+[graphviz]
+....
+digraph fsm {
+    rankdir=LR;
+    size="8.5"
+    node [shape = doublecircle]; LR_0 LR_3 LR_4 LR_8;
+    node [shape = circle];
+    LR_0 -> LR_2 [label = "SS(B)"];
+    LR_0 -> LR_1;
+    LR_1 -> LR_3;
+    LR_2 -> LR_6;
+    LR_2 -> LR_5;
+    LR_2 -> LR_4;
+    LR_5 -> LR_7;
+    LR_5 -> LR_5 [label = "S(a)"];
+    LR_6 -> LR_6;
+    LR_6 -> LR_5;
+    LR_7 -> LR_8 [label = "S(b)"];
+    LR_7 -> LR_5;
+    LR_8 -> LR_6;
+    LR_8 -> LR_5;
+}
+....

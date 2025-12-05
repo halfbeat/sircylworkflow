@@ -1,5 +1,5 @@
 import logging
-import os
+from abc import ABC, abstractmethod
 from typing import Any, Callable
 
 import pika
@@ -119,4 +119,18 @@ class RabbitMQ:
     def queue_bind(self, queue_name, exchange_name, routing_key):
         if not self.channel or self.channel.is_closed:
             self.connect()
-        self.channel.queue_bind(queue_name, exchange_name, routing_key) 
+        self.channel.queue_bind(queue_name, exchange_name, routing_key)
+
+
+class RabbitMQWorker(ABC):
+    def __init__(self, rabbitmq: RabbitMQ, queue_name:str):
+        self.rabbit = rabbitmq
+        self.queue_name = queue_name
+
+    @abstractmethod
+    def process_message(self, ch, method, properties, body):
+        pass
+
+    def run(self, max_num_messages: int, auto_ack: bool = True, inactivity_timeout: float = None):
+        while True:
+            self.rabbit.fixed_consume(self.queue_name, self.process_message, max_num_messages, auto_ack, inactivity_timeout)

@@ -1,10 +1,10 @@
 from authzclient.error import CredencialesRequeridas, PermisoRequerido, TokenJwtInvalido, TokenJwtRequerido
-from flask import Flask, request
+from flask import Flask
 
 from sircylworkflow.error import BadParam, ErrorGenerico
-from sircylworkflow.view.errorhandlers import handle_bad_param, handle_credenciales_requeridas, handle_error_generico, handle_permiso_requerido, handle_token_invalido, handle_token_requerido
-
-from ..view import routes
+from . import routes
+from .errorhandlers import handle_bad_param, handle_credenciales_requeridas, handle_error_generico, \
+    handle_permiso_requerido, handle_token_invalido, handle_token_requerido
 
 
 def create_app():

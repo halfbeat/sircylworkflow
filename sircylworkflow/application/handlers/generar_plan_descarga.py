@@ -10,7 +10,7 @@ from sircylworkflow.application.commands import GenerarPlanDescargaCommand
 from sircylworkflow.domain.model import FormatoDescarga
 from sircylworkflow.domain.security import MyUsuario, Permisos
 from sircylworkflow.messagebus import CommandHandler
-from sircylworkflow.view.model import AsientoViewDto, PlanDescargaViewDto
+from sircylworkflow.viewmodel import AsientoViewDto, PlanDescargaViewDto
 
 
 class GenerarPlanDescargaHandler(CommandHandler):

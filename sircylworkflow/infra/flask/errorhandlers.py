@@ -8,9 +8,9 @@ from authzclient.error import (
 )
 from flask import Response
 
-from sircylworkflow.error import BadParam, ErrorGenerico
 from sircylworkflow.constants import MIMETYPE_JSON
-from sircylworkflow.view.model import ErrorViewDto
+from sircylworkflow.error import BadParam, ErrorGenerico
+from sircylworkflow.viewmodel import ErrorViewDto
 
 
 def handle_bad_param(e: BadParam):

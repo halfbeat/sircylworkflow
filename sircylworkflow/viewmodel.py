@@ -3,7 +3,6 @@ from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel
-from sircylclient.client import DEFAULT_MAX_REGISTROS
 
 
 class ErrorViewDto(BaseModel):
@@ -20,7 +19,7 @@ class FiltroFicherosViewDto(BaseModel):
 class SolicitudDescargaDocumentosViewDto(BaseModel):
     fecha_inicio: datetime.datetime
     fecha_fin: datetime.datetime
-    max_asientos: Optional[int] = DEFAULT_MAX_REGISTROS
+    max_asientos: Optional[int] = None
     filtro_ficheros: Optional[FiltroFicherosViewDto] = FiltroFicherosViewDto()
 
 

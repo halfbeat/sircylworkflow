@@ -2,23 +2,19 @@ import datetime as dt
 import logging
 from pathlib import Path
 
-from flask import Blueprint, Response, request
 from dependency_injector.wiring import inject, Provide
+from flask import Blueprint, Response, request
 from werkzeug.utils import secure_filename
 
-from sircylworkflow.constants import MIMETYPE_CSV, MIMETYPE_JSON
 from sircylworkflow.application.commands import (
     EjecutarPlanDescargaCommand,
     GenerarPlanDescargaCommand,
 )
+from sircylworkflow.application.services.sircylservice import FormatoDescarga
+from sircylworkflow.constants import MIMETYPE_CSV, MIMETYPE_JSON
+from sircylworkflow.containers import Container, MessageBus
 from sircylworkflow.error import BadParam
-from sircylworkflow.application.services.sircylservice import FormatoDescarga, SircylService
-
-from ..containers import Container, MessageBus
-from .model import SolicitudDescargaDocumentosViewDto
-
-
-from flask import current_app as app
+from sircylworkflow.viewmodel import SolicitudDescargaDocumentosViewDto
 
 rest_services_blueprint = Blueprint(
     "rest_services",

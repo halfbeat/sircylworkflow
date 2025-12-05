@@ -7,6 +7,8 @@ from typing import Optional
 from sircylworkflow.domain.model import FormatoDescarga
 from sircylworkflow.messagebus import Command
 
+from sircylclient.port import Asiento
+
 @dataclass
 class GenerarPlanDescargaCommand(Command):
     fecha_inicio: datetime.datetime
@@ -20,3 +22,7 @@ class EjecutarPlanDescargaCommand(Command):
     plan_id: str
     csv: typing.TextIO
     max_asientos: Optional[int] = None
+
+@dataclass
+class DescargarDocumentosAsientoCommand(Command):
+    asiento: Asiento

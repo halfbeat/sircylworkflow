@@ -1,10 +1,9 @@
 import argparse
 import os
 
-from dependency_injector import containers
-
 from sircylworkflow.containers import Container
-from sircylworkflow.infra import application
+from sircylworkflow.infra.flask import application
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -89,30 +88,56 @@ def main():
         help="Puerto para enviar logs a Graylog",
         default=os.environ.get("GRAYLOG_PORT", "32201"),
     )
+    parser.add_argument(
+        "--secrets-dir",
+        help="Directorio donde se guardan los secretos",
+        default=os.environ.get("SECRETS_DIR", "/run/secrets")
+    )
+    parser.add_argument(
+        "--authz-url",
+        help="URL del servicio de autorización",
+        default=os.environ.get("AUTHZ_URL", "http://jcwbl12des001.ae.jcyl.es/authz/services")
+    )
+    parser.add_argument(
+        "--authz-application",
+        help="ID de la aplicación para a la autorización",
+        default=os.environ.get("AUTHZ_APLICACION", "SIRCYL")
+    )
+    parser.add_argument(
+        "--authz-jwt-token",
+        help="Token JWT que identifica la aplicación",
+        default=os.environ.get("AUTHZ_TOKEN", "")
+    )
+    parser.add_argument(
+        "--oauth2-public-key",
+        help = "Public Key del proveedor de token JWT en el que se confía",
+        default=os.getenv("OAUTH2_PUBLIC_KEY", "")
+    )
     args = parser.parse_args()
 
     container = Container()
 
-    container.config.authz.aplicacion.from_env("AUTHZ_APLICACION")
-    container.config.authz.authz_uri.from_env("AUTHZ_URI")
-    container.config.authz.jwt_token.from_env("AUTHZ_TOKEN")
+    container.config.authz.aplicacion.from_value(args.authz_application)
+    container.config.authz.authz_uri.from_value(args.authz_url)
+    container.config.authz.jwt_token.from_value(args.authz_jwt_token)
 
-    container.config.secrets.path.from_env("SECRETS_DIR")
+    container.config.secrets.path.from_value(args.secrets_dir)
+    container.config.oauth2.public_key.from_value(args.oauth2_public_key)
 
-    container.config.symmetric_key.secret_key.from_env("FLASK_SECRET_KEY")
+    container.config.symmetric_key.secret_key.from_value(args.secret_key)
 
     container.config.sircyl.ws_url.from_value(args.sircyl_url)
     container.config.sircyl.username.from_value(args.sircyl_username)
     container.config.sircyl.password.from_value(args.sircyl_password)
     container.config.sircyl.max_calls_per_minute.from_value(args.sircyl_max_call_per_minute)
 
-    container.config.rabbitmq.host.from_env("RABBITMQ_HOST")
-    container.config.rabbitmq.port.from_env("RABBITMQ_PORT")
-    container.config.rabbitmq.username.from_env("RABBITMQ_USERNAME")
-    container.config.rabbitmq.password.from_env("RABBITMQ_PASSWORD")
-    container.config.rabbitmq.vhost.from_env("RABBITMQ_VHOST")
+    container.config.rabbitmq.host.from_value(args.rabbitmq_host)
+    container.config.rabbitmq.port.from_value(args.rabbitmq_port)
+    container.config.rabbitmq.username.from_value(args.rabbitmq_username)
+    container.config.rabbitmq.password.from_value(args.rabbitmq_password)
+    container.config.rabbitmq.vhost.from_value(args.rabbitmq_vhost)
 
-    container.wire(modules=[".messagebus", ".view.routes"])
+    container.wire(modules=["sircylworkflow.infra.flask.routes"])
 
     app = application.create_app()
     app.run()

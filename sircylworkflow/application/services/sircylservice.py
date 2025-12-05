@@ -2,13 +2,15 @@ import datetime as dt
 import io
 import json
 from typing import Optional
+
 from sircylclient.client import SircylClient
 from sircylclient.port import Asiento, FiltroAsientos
 from sircylclient.serializer import Serializer
 
 from sircylworkflow.application.commands import FormatoDescarga
 from sircylworkflow.domain.security import MyUsuario, Permisos
-from sircylworkflow.view.model import AsientoViewDto, PlanDescargaViewDto
+from sircylworkflow.viewmodel import AsientoViewDto, PlanDescargaViewDto
+
 
 class SircylService:
     def __init__(self, sircyl_client: SircylClient, current_user: MyUsuario) -> None:
